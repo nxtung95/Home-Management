@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import java.sql.Date;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class PriceResponseDto {
 	private Date date;

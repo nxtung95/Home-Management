@@ -4,15 +4,12 @@ import com.tungnx.home.dto.PriceResponseDto;
 import com.tungnx.home.entity.Price;
 import com.tungnx.home.repository.PriceRepository;
 import com.tungnx.home.service.PriceService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
