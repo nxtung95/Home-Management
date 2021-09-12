@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <th:block th:insert="~{common/library :: head/link}"></th:block>
+    <th:block th:insert="~{common/library :: head/script}"></th:block>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/dashboard.css}" href="../../../css/dashboard.css">
+</head>
+<body>
+<th:block th:insert="~{/fragments/spinner :: #loader}"></th:block>
+
+<div class="wrapper" style="display: none">
+    <!-- Sidebar -->
+    <nav th:replace="~{/common/client_menu :: nav}"></nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <!-- Header -->
+        <nav th:replace="~{/common/header :: nav}"></nav>
+
+        <!-- Content -->
+        <article>
+            <div class="container">
+                <h2 class="text-center">Tiền nhà trọ (VNĐ)</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Tiền nhà</th>
+                            <th>Tiền điện</th>
+                            <th>Tiền nước</th>
+                            <th>Tiền mạng</th>
+                            <th>Tiền rác</th>
+                            <th>Tổng</th>
+                            <th>Ghi chú</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="price : ${priceList}">
+                            <td>Tháng <span th:text="${#dates.format(price.date, 'MM-yyyy')}"></span></td>
+                            <td><span th:text="${price.roomPrice}"></span></td>
+                            <td><span th:text="${price.electricPrice}"></span></td>
+                            <td><span th:text="${price.waterPrice}"></span></td>
+                            <td><span th:text="${price.internetPrice}"></span></td>
+                            <td><span th:text="${price.garbagePrice}"></span></td>
+                            <td><span th:text="${price.total}"></span></td>
+                            <td><span th:text="${price.note}"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <canvas id="myChart">
+
+                </canvas>
+            </div>
+        </article>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        const priceList = [[${priceList}]];
+        let dataChart = [];
+        let label = [];
+        for (const key in priceList) {
+            dataChart.push(parseFloat(priceList[key].total.replace(/\./g, '')));
+            const date = priceList[key].date.split('-');
+            label.push("Tháng " + date[1] + '-' + date[0]);
+        }
+        const myChart = document.getElementById('myChart').getContext('2d');
+        // Global Options
+
+        const labels = label;
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Biểu đồ so sánh tổng tiền trọ 6 tháng gần nhất',
+                data: dataChart,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(54, 162, 235)',
+                    'rgb(54, 162, 235)',
+                    'rgb(54, 162, 235)',
+                    'rgb(54, 162, 235)',
+                    'rgb(54, 162, 235)',
+                    'rgb(54, 162, 235)'
+                ],
+                borderWidth: 0.5
+            }]
+        };
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMin: 1000000,
+                    }
+                }
+            },
+        };
+        const chart = new Chart(myChart, config);
+    });
+</script>
+</html>

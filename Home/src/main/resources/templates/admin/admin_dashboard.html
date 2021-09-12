@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <th:block th:insert="~{common/library :: head/link}"></th:block>
+    <th:block th:insert="~{common/library :: head/script}"></th:block>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/dashboard.css}" href="../../../css/dashboard.css">
+</head>
+<body>
+<th:block th:insert="~{/fragments/spinner :: #loader}"></th:block>
+
+<div class="wrapper" style="display: none">
+    <!-- Sidebar -->
+    <th:block th:replace="~{/common/admin_menu :: nav}"></th:block>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <!-- Header -->
+        <nav th:replace="~{/common/header :: nav}"></nav>
+
+        <!-- Content -->
+        <article>
+            <div class="container">
+                <p>Test admin</p>
+<!--                <h2 class="text-center">Tiền nhà trọ (VNĐ)</h2>-->
+<!--                <div class="table-responsive">-->
+<!--                    <table class="table table-bordered">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th></th>-->
+<!--                            <th>Tiền nhà</th>-->
+<!--                            <th>Tiền điện</th>-->
+<!--                            <th>Tiền nước</th>-->
+<!--                            <th>Tiền mạng</th>-->
+<!--                            <th>Tiền rác</th>-->
+<!--                            <th>Tổng</th>-->
+<!--                            <th>Ghi chú</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr th:each="price : ${priceList}">-->
+<!--                            <td>Tháng <span th:text="${#dates.format(price.getDate(), 'MM-yyyy')}"></span></td>-->
+<!--                            <td><span th:text="${price.getRoomPrice()}"></span></td>-->
+<!--                            <td><span th:text="${price.getElectricPrice()}"></span></td>-->
+<!--                            <td><span th:text="${price.getWaterPrice()}"></span></td>-->
+<!--                            <td><span th:text="${price.getInternetPrice()}"></span></td>-->
+<!--                            <td><span th:text="${price.getGarbagePrice()}"></span></td>-->
+<!--                            <td><span th:text="${price.getTotal()}"></span></td>-->
+<!--                            <td><span th:text="${price.getNote()}"></span></td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
+            </div>
+        </article>
+    </div>
+</div>
+</body>
+</html>
