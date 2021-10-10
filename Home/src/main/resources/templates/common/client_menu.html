@@ -8,7 +8,7 @@
     <nav id="sidebar">
         <div th:replace="~{/fragments/sidebar_header :: div.sidebar-header}"></div>
 
-        <ul class="list-unstyled components">
+        <ul class="list-unstyled components sticky-top">
             <li class="active">
                 <a href="/app/client/dashboard"><i class="fa fa-fw fa-globe"></i>Trang chủ</a>
             </li>
@@ -16,7 +16,7 @@
                 <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-fw fa-search"></i>Tra cứu</a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
                     <li>
-                        <a href="#">Tổng tiền trọ</a>
+                        <a href="/app/client/total">Tổng tiền trọ hàng tháng</a>
                     </li>
                     <li>
                         <a href="#">Tổng tiền điện hàng tháng</a>
@@ -30,15 +30,15 @@
                 <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-fw fa-bar-chart"></i>Biểu đồ so sánh</a>
                 <ul class="collapse list-unstyled" id="pageSubmenu">
                     <li>
-                        <a href="#">Tổng tiền trọ </a>
+                        <a href="/app/client/totalPriceChart">Tổng tiền trọ hàng tháng</a>
                     </li>
                     <li>
-                        <a href="#">Tổng tiền điện</a>
+                        <a href="/app/client/totalElectricPriceChart">Tổng tiền điện hàng tháng</a>
                     </li>
                 </ul>
             </li>
             <li>
-                <a href="#"><i class="fa fa-fw fa-comment-o"></i>Phản hồi/Đóng góp</a>
+                <a href="/app/comments"><i class="fa fa-fw fa-comment-o"></i>Phản hồi/Đóng góp</a>
             </li>
             <li>
                 <a href="#"><i class="fa fa-fw fa-envelope"></i>Liên hệ</a>
@@ -50,15 +50,6 @@
                 <a href="#"><i class="fa fa-fw fa-user"></i>Về gia đình</a>
             </li>
         </ul>
-
-<!--        <ul class="list-unstyled CTAs">-->
-<!--            <li>-->
-<!--                <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a>-->
-<!--            </li>-->
-<!--            <li>-->
-<!--                <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>-->
-<!--            </li>-->
-<!--        </ul>-->
     </nav>
 </body>
 </html>

@@ -1,6 +1,5 @@
 package com.tungnx.home.dto;
 
-import com.tungnx.home.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,4 +10,5 @@ public class AuthenticationLoginUserDto {
     private String username;
     private String password;
     private String roleName;
+    private String avatar;
 }

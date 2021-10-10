@@ -1,7 +1,6 @@
 package com.tungnx.home.controller;
 
 import com.tungnx.home.dto.PriceResponseDto;
-import com.tungnx.home.entity.Price;
 import com.tungnx.home.service.PriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,19 +18,23 @@ import java.util.List;
 @RequestMapping("/app")
 public class DashboardController {
     private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
+    
+    public static int count = 1;
 
     @Autowired
     private PriceService priceService;
 
     @GetMapping("/client/dashboard")
     public String showClientDashboard(HttpServletRequest request, Model model) {
+        log.info("Thread " + Thread.currentThread().getName() + ", count = " + count++);
         try {
             HttpSession session = request.getSession(false);
             int userId = session != null ? (int) session.getAttribute("userId") : 0;
-            List<PriceResponseDto> priceList = priceService.getAllPrice(userId);
+
+            List<PriceResponseDto> priceList = priceService.getAllPriceFirstView(userId, 1, 6);
             model.addAttribute("priceList", priceList);
         } catch (Exception e) {
-            log.error("Error showClientDashboard" + e);
+            log.error("Error showClientDashboard: " + e);
         }
         return "client/client_dashboard";
     }

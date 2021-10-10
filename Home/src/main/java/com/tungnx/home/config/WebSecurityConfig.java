@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.context.request.RequestContextListener;
 
 @Configuration
@@ -48,15 +49,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginProcessingUrl("/app/login")
                     .successHandler(myAuthenticationSuccessHandler())
                     .failureUrl("/app/login?error=true")
-//                    .failureHandler(authenticationFailureHandler("/app/login?error=true"))
                     .and()
-                .exceptionHandling()
-                .accessDeniedPage("/app/login403");
+                .logout()
+                    .logoutUrl("/app/logout")
+                    .logoutSuccessUrl("/app/login")
+//                    .logoutSuccessHandler(logoutSuccessHandler())
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .and()
+                .exceptionHandling().accessDeniedPage("/app/login403");
     }
 
     @Bean
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
         return new UrlAuthenticationSuccessHandler();
+    }
+
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return new LogoutSuccessAuthenticationHandler();
     }
 
 //    public AuthenticationFailureHandler authenticationFailureHandler(String failureUrl) {

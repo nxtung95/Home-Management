@@ -26,4 +26,6 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<Price> prices;
+
+    private String avatar;
 }

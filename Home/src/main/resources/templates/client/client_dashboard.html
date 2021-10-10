@@ -7,6 +7,8 @@
     <th:block th:insert="~{common/library :: head/script}"></th:block>
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/dashboard.css}" href="../../../css/dashboard.css">
     <script th:src="@{/resources/js/dashboard.js}" src="../../../js/dashboard.js"></script>
+    <script th:src="@{/resources/js/header.js}" src="../../js/header.js"></script>
+    <link rel="stylesheet" type="text/css"  th:href="@{/resources/css/header.css}" href="../../../css/header.css">
 </head>
 <body>
 <th:block th:insert="~{/fragments/spinner :: #loader}"></th:block>
@@ -24,7 +26,7 @@
         <article>
             <div class="container">
                 <h2 class="text-center">Tiền nhà trọ (VNĐ)</h2>
-                <div class="table-responsive">
+                <div class="table-responsive" style="width: 105%;">
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -35,20 +37,24 @@
                             <th>Tiền mạng</th>
                             <th>Tiền rác</th>
                             <th>Tổng</th>
+                            <th>Trạng thái</th>
                             <th>Ghi chú</th>
+                            <th>Ngày nộp</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="price : ${priceList}">
-                            <td>Tháng <span th:text="${#dates.format(price.date, 'MM-yyyy')}"></span></td>
-                            <td><span th:text="${price.roomPrice}"></span></td>
-                            <td><span th:text="${price.electricPrice}"></span></td>
-                            <td><span th:text="${price.waterPrice}"></span></td>
-                            <td><span th:text="${price.internetPrice}"></span></td>
-                            <td><span th:text="${price.garbagePrice}"></span></td>
-                            <td><span th:text="${price.total}"></span></td>
-                            <td><span th:text="${price.note}"></span></td>
-                        </tr>
+                            <tr th:each="price : ${priceList}">
+                                <td>Tháng <span th:text="${#dates.format(price.createdAt, 'MM-yyyy')}"></span></td>
+                                <td><span th:text="${price.roomPrice}"></span></td>
+                                <td><span th:text="${price.electricPrice}"></span></td>
+                                <td><span th:text="${price.waterPrice}"></span></td>
+                                <td><span th:text="${price.internetPrice}"></span></td>
+                                <td><span th:text="${price.garbagePrice}"></span></td>
+                                <td><span th:text="${price.total}"></span></td>
+                                <td><span th:text="${price.status ? 'Đã nộp' : 'Chưa nộp'}"></span></td>
+                                <td><span th:text="${price.note}"></span></td>
+                                <td><span th:text="${#dates.format(price.depositedAt, 'dd/MM/yyyy')}"></span></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -66,8 +72,8 @@
         let dataChart = [];
         let label = [];
         for (const key in priceList) {
-            dataChart.push(parseFloat(priceList[key].total.replace(/\./g, '')));
-            const date = priceList[key].date.split('-');
+            dataChart.push(parseFloat(replaceDotToApostrophe(priceList[key].total)));
+            const date = priceList[key].createdAt.split('-');
             label.push("Tháng " + date[1] + '-' + date[0]);
         }
         const myChart = document.getElementById('myChart').getContext('2d');

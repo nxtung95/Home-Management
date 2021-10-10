@@ -21,7 +21,13 @@
                         <a class="nav-link " href="#"><i class="fa fa-fw fa-user"></i>User</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-sign-out"></i>Log out</a>
+                        <a class="nav-link" href="#" onclick="logoutSubmit()">
+                            <form id="frmLogout" th:action="@{/app/logout}" method="POST">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            </form>
+                            <i class="fa fa-sign-out"></i>
+                            Log out
+                        </a>
                     </li>
                 </ul>
             </div>

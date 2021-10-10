@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Total Electric Price Chart</title>
+    <th:block th:insert="~{common/library :: head/link}"></th:block>
+    <th:block th:insert="~{common/library :: head/script}"></th:block>
+    <script th:src="@{/resources/js/header.js}" src="../../js/header.js"></script>
+    <link rel="stylesheet" type="text/css"  th:href="@{/resources/css/header.css}" href="../../../css/header.css">
+</head>
+<body>
+<th:block th:insert="~{/fragments/spinner :: #loader}"></th:block>
+<div class="wrapper" style="display: none">
+    <!-- Sidebar -->
+    <nav th:replace="~{/common/client_menu :: nav}"></nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <!-- Header -->
+        <nav th:replace="~{/common/header :: nav}"></nav>
+
+        <!-- Content -->
+        <article>
+            <h2 class="text-center">Biểu đồ so sánh tổng tiền điện theo mỗi tháng trong 3 năm gần nhất</h2>
+            <canvas id="myChart">
+
+            </canvas>
+        </article>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    const myChart = document.getElementById('myChart').getContext('2d');
+
+    const totalPriceChartList = [[${totalPriceChartList}]];
+    const dataSets = [];
+    const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+    const totals = [];
+    for (var key in totalPriceChartList) {
+        dataSets.push(key);
+        const totalPriceCharts = totalPriceChartList[key];
+        const totalOneYear = [];
+        for (const obj of totalPriceCharts) {
+            totalOneYear[obj["month"] - 1] = replaceDotToApostrophe(obj["electricPrice"]);
+        }
+        totals.push(totalOneYear);
+    }
+
+    for (const obj of totals) {
+        for (let i = 0; i < months.length; i++) {
+            if (!obj.hasOwnProperty(i)) {
+                obj[i] = '';
+            }
+        }
+    }
+    const dataList = [];
+    for (let i in dataSets) {
+        dataList.push({
+            label: 'Năm ' + dataSets[i],
+            data: totals[i],
+            borderColor: getColorForChart(i),
+            backgroundColor: getColorForChart(i),
+        });
+    }
+    const data = {
+        labels: months,
+        datasets: dataList,
+    };
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Biểu đồ'
+                }
+            }
+        },
+    };
+    const chart = new Chart(myChart, config);
+</script>
+</html>

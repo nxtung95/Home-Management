@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
@@ -27,15 +28,18 @@ public class UrlAuthenticationSuccessHandler implements AuthenticationSuccessHan
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 		log.info("Authentication sucess to redirect url, role: " + authentication.getAuthorities().toString());
 		handle(request, response, authentication);
-		setAuthenticationAttributes(request);
+		setAuthenticationAttributes(request, authentication);
 		clearAuthenticationAttributes(request);
 	}
 
-	private void setAuthenticationAttributes(HttpServletRequest request) {
+	private void setAuthenticationAttributes(HttpServletRequest request, Authentication authentication) {
 		HttpSession httpSession = request.getSession(false);
-		if (request.getAttribute("userId") != null && httpSession != null) {
+		if (request.getAttribute("userId") != null && httpSession != null && authentication != null) {
 			log.info("Authentication sucess, set userId atrribute into session ======= userId =" + request.getAttribute("userId"));
 			httpSession.setAttribute("userId", request.getAttribute("userId"));
+			httpSession.setAttribute("avatar", request.getAttribute("avatar"));
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			httpSession.setAttribute("userName", userDetails.getUsername());
 		}
 	}
 

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title>Comment</title>
+    <th:block th:insert="~{common/library :: head/link}"></th:block>
+    <th:block th:insert="~{common/library :: head/script}"></th:block>
+    <script th:src="@{/resources/js/header.js}" src="../../js/header.js"></script>
+    <script th:src="@{/resources/js/comment.js}" src="../../js/comment.js"></script>
+    <link rel="stylesheet" type="text/css"  th:href="@{/resources/css/header.css}" href="../../../css/header.css">
+    <link rel="stylesheet" type="text/css"  th:href="@{/resources/css/comment.css}" href="../../../css/comment.css">
+</head>
+<body>
+    <th:block th:insert="~{/fragments/spinner :: #loader}"></th:block>
+    <div class="wrapper" style="display: none">
+        <!-- Sidebar -->
+        <nav th:replace="~{/common/client_menu :: nav}"></nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <!-- Header -->
+            <nav th:replace="~{/common/header :: nav}"></nav>
+            <!-- Content -->
+            <section class="content-item" id="comments">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8" id="myGroup">
+                            <form id="frmInsertComment">
+                                <h3 class="pull-left">New Comment</h3>
+                                <button type="button" class="btn btn-normal pull-right" onclick="insertComment(this)" data-submit="1" data-parentId="0">Submit</button>
+                                <fieldset>
+                                    <div class="row">
+                                        <div class="col-sm-3 col-lg-2 hidden-xs">
+                                            <img class="rounded-circle" th:src="${avatar}" alt="">
+                                        </div>
+                                        <div class="form-group col-xs-12 col-sm-9 col-lg-10">
+                                            <textarea class="form-control" id="message" placeholder="Your message" required="" name="comment"></textarea>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                            <h3 th:if="${totalComment > 0}">Tổng <th:block th:text="${totalComment}"></th:block> bình luận</h3>
+                            <h3 th:unless="${totalComment > 0}">Chưa có bình luận nào</h3>
+                            <!-- COMMENT START -->
+                            <th:block th:each="comment : ${comments}">
+                                <div class="media" th:if="${comment.depth} == 0">
+                                     <a class="pull-left" href="#"><img class="rounded-circle" th:src="${comment.avatar}" alt="Avatar admin"></a>
+                                    <div class="media-body d-flex flex-column">
+                                        <div class="col-12 d-flex align-items-center">
+                                            <h4 class="media-heading" th:text="${comment.userName}"></h4>
+                                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                Posted on <th:block th:utext="${#dates.format(comment.createdAt, 'dd-MM-yyyy HH:mm')}"></th:block>
+                                            </span>
+                                        </div>
+                                        <p th:text="${comment.comment}"></p>
+                                        <ul class="list-unstyled list-inline media-detail pull-left">
+                                            <li>
+                                                <i class="fa fa-thumbs-up"></i>
+                                                <th:block th:text="${comment.totalLike}"></th:block>
+                                            </li>
+                                            <li class="like p-2 cursor action-collapse" data-toggle="collapse" aria-expanded="false" th:attr="data-target='#collapse-' + ${comment.id}" th:attrappend="aria-controls='collapse-' + ${comment.id}" >
+                                                <a href="javascript:void(0)" onclick="moveToCollapseElement(this)">Reply</a>
+                                            </li>
+                                        </ul>
+                                        <th:block th:each="childComment : ${comment.getChildComments()}">
+                                            <div class="media mt-4">
+                                                <a class="pr-3" href="#">
+                                                     <img class="rounded-circle" alt="Avatar member" th:src="${childComment.avatar}" />
+                                                </a>
+                                                <div class="media-body d-flex flex-column">
+                                                    <div class="row">
+                                                        <div class="col-12 d-flex align-items-center">
+                                                            <h5 th:text="${childComment.userName}"></h5>
+                                                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Posted on <th:block th:utext="${#dates.format(childComment.createdAt, 'dd-MM-yyyy HH:mm')}"></th:block></span>
+                                                        </div>
+                                                    </div>Truy
+                                                    <p th:utext="${childComment.comment}"></p>
+                                                    <ul class="list-unstyled list-inline media-detail pull-left">
+                                                        <li>
+                                                            <i class="fa fa-thumbs-up"></i>
+                                                            <th:block th:text="${comment.totalLike}"></th:block>
+                                                        </li>
+                                                        <li class="like p-2 cursor action-collapse" data-toggle="collapse" aria-expanded="false" th:attr="data-target='#collapse-' + ${comment.id}" th:attrappend="aria-controls='collapse-' + ${comment.id}" >
+                                                            <a href="javascript:void(0)" onclick="moveToCollapseElement()">Reply</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </th:block>
+                                        <div th:id="'collapse-' + ${comment.id}" class="bg-light p-2 collapse" data-parent="#myGroup">
+                                            <form th:id="'frmReplyComment-' + ${comment.id}">
+                                                <div class="d-flex flex-row align-items-start">
+                                                    <img class="rounded-circle" th:src="${avatar}" width="40">
+                                                    <textarea class="form-control ml-1 shadow-none textarea" th:id="'replyMessage-' + ${comment.id}" name="comment"></textarea>
+                                                </div>
+                                                <div class="mt-2 text-right">
+                                                    <button class="btn btn-sm shadow-none" type="button" onclick="insertComment(this)" data-submit="2" th:data-parentId="${comment.id}">Reply comment</button>
+                                                    <button class="btn btn-outline-primary btn-sm ml-1 shadow-none action-collapse" type="button" data-toggle="collapse" aria-expanded="false" th:attr="data-target='#collapse-' + ${comment.id}" th:attrappend="aria-controls='collapse-' + ${comment.id}">Cancel</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                            <!-- COMMENT END -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

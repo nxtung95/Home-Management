@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    setActiveClassSideBar();
+});
+
+function setActiveClassSideBar() {
     const navContainer = document.getElementById("sidebar");
     const ulElement = navContainer.querySelector("div ~ ul");
     const liElements = ulElement.querySelectorAll(":scope > li");
@@ -10,4 +14,4 @@ $(document).ready(function () {
             this.className += "active";
         });
     }
-});
+}

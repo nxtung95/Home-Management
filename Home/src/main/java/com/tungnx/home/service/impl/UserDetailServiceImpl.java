@@ -47,6 +47,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         log.info("Info user login: " + user);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         request.setAttribute("userId", users.get(0).getId());
+        request.setAttribute("avatar", users.get(0).getAvatar());
         return user;
     }
 }
