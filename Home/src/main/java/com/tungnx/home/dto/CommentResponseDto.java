@@ -1,29 +1,36 @@
 package com.tungnx.home.dto;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
 @Data
-@RequiredArgsConstructor
 public class CommentResponseDto {
-	private final BigInteger num;
-	private final int id;
-	private final String comment;
+	private BigInteger num;
+	private int id;
+	private String comment;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private final Date createdAt;
+	private Date createdAt;
 
-	private final int totalLike;
-	private final String userName;
-	private final int depth;
-	private final int ancestor;
-	private final String avatar;
+	private int totalLike;
+	private String userName;
+	private int depth;
+	private int ancestor;
+	private String avatar;
+
+	public CommentResponseDto(BigInteger num, int id, String comment, Date createdAt, int totalLike, String userName, int depth, int ancestor, String avatar) {
+		this.num = num;
+		this.id = id;
+		this.comment = comment;
+		this.createdAt = createdAt;
+		this.totalLike = totalLike;
+		this.userName = userName;
+		this.depth = depth;
+		this.ancestor = ancestor;
+		this.avatar = avatar;
+	}
 
 	private List<CommentResponseDto> childComments;
 	private int total;

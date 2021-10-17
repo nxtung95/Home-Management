@@ -1,22 +1,28 @@
-//package com.tungnx.home.entity;
-//
-//import lombok.Data;
-//
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-//
-//@Data
-//@Entity
-//public class Student {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    private int id;
-//
-//    private String name;
-//    private String gender;
-//    private String phone;
-//    private String address;
-//    private int status;
-//}
+package com.tungnx.home.entity;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Getter
+@Setter
+public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private String name;
+    private String gender;
+    private String phone;
+    private String address;
+
+    @Temporal(TemporalType.DATE)
+    private Date stayDate;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "room_id", nullable = false)
+    private RoomInfo roomInfo;
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Total Electric Price</title>
+    <th:block th:insert="~{common/library :: head/link}"></th:block>
+    <th:block th:insert="~{common/library :: head/script}"></th:block>
+    <script th:src="@{/resources/js/header.js}" src="../../js/header.js"></script>
+    <script th:src="@{/resources/js/electric_price.js}" src="../../js/electric_price.js"></script>
+    <link rel="stylesheet" type="text/css"  th:href="@{/resources/css/header.css}" href="../../../css/header.css">
+</head>
+<body>
+<th:block th:insert="~{/fragments/spinner :: #loader}"></th:block>
+<div class="wrapper" style="display: none">
+    <!-- Sidebar -->
+    <nav th:replace="~{/common/client_menu :: nav}"></nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <!-- Header -->
+        <nav th:replace="~{/common/header :: nav}"></nav>
+        <div class="container">
+            <h2 class="text-center">Tổng tiền điện</h2>
+            <form id="frmSearchClientTotal" style="margin-bottom: 100px">
+                <div class="form-row d-flex justify-content-around align-items-center align-self-center">
+                    <div class="col-md-2">
+                        <label class="form-label">Năm</label>
+                        <select id="year" name="year" class="select2 form-control">
+                            <option value="">Tất cả</option>
+                            <option value="2022">Năm 2022</option>
+                            <option value="2021">Năm 2021</option>
+                            <option value="2020">Năm 2020</option>
+                            <option value="2019">Năm 2019</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Tháng</label>
+                        <select id="month" name="month" class="select2 form-control">
+                            <option value="">Tất cả</option>
+                            <option value="12">Tháng 12</option>
+                            <option value="11">Tháng 11</option>
+                            <option value="10">Tháng 10</option>
+                            <option value="09">Tháng 9</option>
+                            <option value="08">Tháng 8</option>
+                            <option value="07">Tháng 7</option>
+                            <option value="06">Tháng 6</option>
+                            <option value="05">Tháng 5</option>
+                            <option value="04">Tháng 4</option>
+                            <option value="03">Tháng 3</option>
+                            <option value="02">Tháng 2</option>
+                            <option value="01">Tháng 1</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="">
+                            <button type="button" id="btnSearch" class="btn btn-search" th:data-current_page="${currentPage}" onclick="searchElectricPrice(this)">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Số điện tháng trước</th>
+                            <th>Số điện tháng này</th>
+                            <th>Tổng số điện</th>
+                            <th>Đơn giá</th>
+                            <th>Tổng tiền điện</th>
+                            <th>Ghi chú</th>
+                        </tr>
+                    </thead>
+                    <tbody id="priceListTable">
+                        <tr th:each="price : ${priceList}">
+                            <td>Tháng <span th:text="${#dates.format(price.getImportedDate(), 'MM-yyyy')}"></span></td>
+                            <td><span th:text="${price.preElectricNum}"></span></td>
+                            <td><span th:text="${price.curElectricNum}"></span></td>
+                            <td><span th:text="${price.totalElectricNum}"></span></td>
+                            <td><span th:text="${price.unitPrice}"></span></td>
+                            <td><span th:text="${price.totalElectricPrice}"></span></td>
+                            <td><span th:text="${price.note}"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination control -->
+            <!-- Hardcoding the default page-size as 6. User can create a dropdown to select the different page-sizes. -->
+            <ul id="pagination" class="pagination" th:if="${totalPage > 1}">
+                <li class="page-item" th:if="${currentPage != 1}">
+                    <a class="page-link" onclick="searchElectricPrice(this)" href="#" th:data-current_page="${currentPage - 1}">Previous</a> <!-- th:href="@{'/app/client/total?pageNumber=' + ${currentPage - 1} + '&pageSize=' + 6 + '&year=' + '&month=' + '&status='}" -->
+                </li>
+                <li class="page-item" th:each="i: ${#numbers.sequence(1, totalPage)}" th:classappend="${i == currentPage ? ' active' : ''}">
+                    <a class="page-link" onclick="searchElectricPrice(this)" href="#" th:data-current_page="${i}">[[${i}]]</a> <!-- th:href="@{'/app/client/total?pageNumber=' + ${i} + '&pageSize=' + 6 + '&year=' + '&month=' + '&status='} -->
+                </li>
+                <li class="page-item" th:if="${currentPage < totalPage}">
+                    <a class="page-link" onclick="searchElectricPrice(this)" href="#" th:data-current_page="${currentPage + 1}">Next</a> <!-- th:href="@{'/app/client/total?pageNumber=' + ${currentPage + 1} + '&pageSize=' + 6 + '&year=' + '&month=' + '&status='}" -->
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

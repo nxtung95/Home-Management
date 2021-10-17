@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Information</title>
+    <th:block th:insert="~{common/library :: head/link}"></th:block>
+    <th:block th:insert="~{common/library :: head/script}"></th:block>
+    <script th:src="@{/resources/js/header.js}" src="../../js/header.js"></script>
+    <link rel="stylesheet" type="text/css"  th:href="@{/resources/css/header.css}" href="../../../css/header.css">
+    <link rel="stylesheet" type="text/css"  th:href="@{/resources/css/infor.css}" href="../../../css/infor.css">
+</head>
+<body>
+<th:block th:insert="~{/fragments/spinner :: #loader}"></th:block>
+<div class="wrapper" style="display: none">
+    <!-- Sidebar -->
+    <nav th:replace="~{/common/client_menu :: nav}"></nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <!-- Header -->
+        <nav th:replace="~{/common/header :: nav}"></nav>
+
+        <div class="container">
+            <div class="d-flex align-items-center p-3 my-3 text-white-50 rounded box-shadow" style="background-color: #17a2b8">
+                <i class="mr-3 fa fa-fw fa-home fa-3x"></i>
+                <div class="lh-100">
+                    <h6 class="mb-0 text-white lh-100" style="font-size: 2rem;">Thông tin phòng trọ</h6>
+                    <small style="font-size: 100%">Since 2015</small>
+                </div>
+            </div>
+            <div class="my-3 p-3 bg-white rounded box-shadow">
+<!--                <h4 class="border-bottom border-gray pb-2 mb-0">Thông tin phòng</h4>-->
+                <div class="media text-muted pt-3">
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block" style="color: black">Tên phòng:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<th:block th:utext="${roomInfo.name}"></th:block></strong>
+                    </p>
+                </div>
+                <div class="media text-muted pt-3">
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block" style="color: black">Giá phòng:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<th:block th:utext="${roomInfo.roomPrice}"></th:block></strong>
+                    </p>
+                </div>
+                <div class="media text-muted pt-3">
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block" style="color: black">Ngày vào ở:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<th:block th:utext="${#dates.format(stayDate, 'dd-MM-yyyy')}"></th:block></strong>
+                    </p>
+                </div>
+                <div class="media text-muted pt-3">
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block" style="color: black">Tổng số người thuê:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<th:block th:utext="${roomInfo.getStudentResponseDtoSet().size()}"></th:block></strong>
+                    </p>
+                </div>
+                <small class="d-block text-right mt-3">
+                    <a href="#">All updates</a>
+                </small>
+            </div>
+
+            <div class="d-flex align-items-center p-3 my-3 text-white-50 rounded box-shadow" style="background-color: #17a2b8">
+                <i class="mr-3 fa fa fa-fw fa-user fa-3x"></i>
+                <div class="lh-100">
+                    <h6 class="mb-0 text-white lh-100" style="font-size: 2rem;">Người thuê trọ</h6>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap flex-row align-content-center my-3 p-3 bg-white rounded box-shadow" >
+                <th:block th:each="student, index : ${roomInfo.getStudentResponseDtoSet()}">
+                    <th:block th:if="${index.last == true}">
+                        <div class="flex-fill card media text-muted pt-3 shadow p-3" style="width: 30%">
+                            <div class="d-flex flex-column align-items-center" style="color: black">
+                                <img th:src="@{/resources/image/default_user.png}" alt="John" style="width:30%">
+                                <h3 th:text="${student.getName()}"></h3>
+                                <p th:text="${student.getGender()}"></p>
+                                <p th:text="${student.getAddress()}"></p>
+                                <p th:text="${student.getPhone()}"></p>
+                                <p>Ngày vào ở: <th:block th:text="${student.getStayDate()}"></th:block></p>
+                            </div>
+                        </div>
+                    </th:block>
+                    <th:block th:unless="${index.last == true}">
+                        <div class="flex-fill card media text-muted pt-3 mr-3 shadow p-3" style="width: 30%">
+                            <div class="d-flex flex-column align-items-center" style="color: black">
+                                <img th:src="@{/resources/image/default_user.png}" alt="John" style="width:30%">
+                                <h3 th:text="${student.getName()}"></h3>
+                                <p th:text="${student.getGender()}"></p>
+                                <p th:text="${student.getAddress()}"></p>
+                                <p th:text="${student.getPhone()}"></p>
+                                <p>Ngày vào ở: <th:block th:text="${student.getStayDate()}"></th:block></p>
+                            </div>
+                        </div>
+                    </th:block>
+                </th:block>
+            </div>
+            <div class="my-3 p-3 bg-white rounded box-shadow">
+                <small class="d-block text-right mt-3">
+                    <a href="#">All updates</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

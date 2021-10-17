@@ -33,10 +33,17 @@ public class CommentController {
 	@RequestMapping(value = "/comments", method = RequestMethod.GET)
 	public String show(HttpServletRequest request, Model model) {
 		log.info("GET Comments");
-		List<CommentResponseDto> comments = commentService.getAllComments();
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			model.addAttribute("avatar", session.getAttribute("avatar"));
+		int limit = 5;
+		int offset = 0;
+		List<CommentResponseDto> comments = null;
+		try {
+			comments = commentService.getAllComments(limit, offset);
+			HttpSession session = request.getSession(false);
+			if (session != null) {
+				model.addAttribute("avatar", session.getAttribute("avatar"));
+			}
+		} catch (Exception e) {
+			log.error("Show Comment" + e);
 		}
 		model.addAttribute("totalComment", comments.get(0).getTotal());
 		model.addAttribute("comments", comments);
@@ -75,4 +82,24 @@ public class CommentController {
 		commentResponseDto.setData(data);
 		return commentResponseDto;
 	}
+
+
+	@RequestMapping(value = "/comments/loadMore", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	@ResponseBody
+	public Map<String, Object> loadMoreComments(@RequestParam int limit, @RequestParam int offset) {
+		log.info("Load more Comment: offset " + offset + ",limit: " + limit);
+		Map<String, Object> result = new HashMap<>();
+		int statusCode;
+		try {
+			List<CommentResponseDto> comments = commentService.getAllComments(limit, offset);
+			statusCode = HttpStatus.OK.value();
+			result.put("comments", comments);
+		} catch (Exception e) {
+			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+			log.info("Error load more comments: " + e);
+		}
+		result.put("statusCode", statusCode);
+		return result;
+	}
+
 }

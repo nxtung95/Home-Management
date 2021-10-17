@@ -62,7 +62,7 @@
                                                 <th:block th:text="${comment.totalLike}"></th:block>
                                             </li>
                                             <li class="like p-2 cursor action-collapse" data-toggle="collapse" aria-expanded="false" th:attr="data-target='#collapse-' + ${comment.id}" th:attrappend="aria-controls='collapse-' + ${comment.id}" >
-                                                <a href="javascript:void(0)" onclick="moveToCollapseElement(this)">Reply</a>
+                                                <a href="javascript:void(0)" onclick="moveToCollapseElement(this)" th:data-parentId="${comment.id}">Reply</a>
                                             </li>
                                         </ul>
                                         <th:block th:each="childComment : ${comment.getChildComments()}">
@@ -84,7 +84,7 @@
                                                             <th:block th:text="${comment.totalLike}"></th:block>
                                                         </li>
                                                         <li class="like p-2 cursor action-collapse" data-toggle="collapse" aria-expanded="false" th:attr="data-target='#collapse-' + ${comment.id}" th:attrappend="aria-controls='collapse-' + ${comment.id}" >
-                                                            <a href="javascript:void(0)" onclick="moveToCollapseElement()">Reply</a>
+                                                            <a href="javascript:void(0)" onclick="moveToCollapseElement(this)" th:data-parentId="${comment.id}">Reply</a>
                                                         </li>
                                                     </ul>
                                                 </div>

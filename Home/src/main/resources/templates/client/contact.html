@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact</title>
+    <th:block th:insert="~{common/library :: head/link}"></th:block>
+    <th:block th:insert="~{common/library :: head/script}"></th:block>
+    <script th:src="@{/resources/js/header.js}" src="../../js/header.js"></script>
+    <link rel="stylesheet" type="text/css"  th:href="@{/resources/css/header.css}" href="../../../css/header.css">
+    <link rel="stylesheet" type="text/css"  th:href="@{/resources/css/contact.css}" href="../../../css/contact.css">
+    <script>
+        // Initialize and add the map
+        function initMap() {
+            // The location of Hanoi
+            const hanoi = { lat: 21.066280, lng: 105.776210 };
+            // The map, centered at Hanoi
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 15.75,
+                center: hanoi,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+            });
+            // The marker, positioned at Uluru
+            const marker = new google.maps.Marker({
+                position: hanoi,
+                map: map,
+            });
+        }
+    </script>
+</head>
+<body>
+    <th:block th:insert="~{/fragments/spinner :: #loader}"></th:block>
+    <div class="wrapper" style="display: none">
+        <!-- Sidebar -->
+        <nav th:replace="~{/common/client_menu :: nav}"></nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <!-- Header -->
+            <nav th:replace="~{/common/header :: nav}"></nav>
+
+            <div class="container">
+                <!--The div element for the map -->
+                <div id="map"></div>
+
+                <h4 class="text-left">Liên hệ</h4>
+                <div class="text-left">Số 7, ngách 36, ngõ 521, đường Cổ Nhuế, P.Cổ Nhuế 2, Q.Bắc Từ Liêm, Hà Nội</div>
+                <div class="text-left">Điện thoại: 0984496817</div>
+                <div class="text-left">STK: 19032750919014, Techcombank chi nhánh Hoàng Quốc Việt, Nghiem Xuan Tung</div>
+            </div>
+        </div>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA66KwUrjxcFG5u0exynlJ45CrbrNe3hEc&callback=initMap"></script>
+    </div>
+</body>
+</html>

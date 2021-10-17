@@ -4,6 +4,7 @@ import com.tungnx.home.dto.CommentResponseDto;
 import com.tungnx.home.repository.CommentRepository;
 import com.tungnx.home.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +20,14 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<CommentResponseDto> getAllComments() {
+	@Cacheable(value = "comments")
+	public List<CommentResponseDto> getAllComments(int limit, int offset) throws Exception {
 		List<CommentResponseDto> result = new ArrayList<>();
 		List<CommentResponseDto> comments = commentRepository.getAllComments();
+		int total = comments.size();
+		if (total <= offset) {
+			throw new Exception("limit-offset over total_comment");
+		}
 		List<CommentResponseDto> childComments = new ArrayList<>();
 
 		int size = comments.size();
@@ -42,13 +48,10 @@ public class CommentServiceImpl implements CommentService {
 				childComments = new ArrayList<>();
 			}
 		}
-		int total = result
-				.stream()
-				.mapToInt(outer -> outer.getChildComments().size() + 1) // + thêm chính phần tử outer
-				.sum();
 		result = result.stream()
 				.sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
-				.limit(5)
+				.skip(offset)
+				.limit(limit)
 				.collect(Collectors.toList());
 		result.get(0).setTotal(total);
 		return result;

@@ -4,10 +4,8 @@ import com.tungnx.home.constant.Common;
 import com.tungnx.home.dto.PriceResponseDto;
 import com.tungnx.home.dto.TotalElectricPriceChartDto;
 import com.tungnx.home.dto.TotalPriceChartResponseDto;
-import com.tungnx.home.entity.Price;
-import com.tungnx.home.entity.Price_;
-import com.tungnx.home.entity.User;
-import com.tungnx.home.entity.User_;
+import com.tungnx.home.entity.*;
+import com.tungnx.home.repository.ElectricPriceRepository;
 import com.tungnx.home.repository.PriceRepository;
 import com.tungnx.home.service.PriceService;
 import com.tungnx.home.util.DateUtil;
@@ -35,6 +33,9 @@ public class PriceServiceImpl implements PriceService {
 
 	@Autowired
 	private PriceRepository priceRepository;
+
+	@Autowired
+	private ElectricPriceRepository electricPriceRepository;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -166,6 +167,30 @@ public class PriceServiceImpl implements PriceService {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Page<ElectricPrice> searchAllElectricPrice(int userId, int pageNumber, int pageSize, String year, String month) throws Exception {
+		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(ElectricPrice_.IMPORTED_DATE).descending());
+		Specification<ElectricPrice> priceSpecification = (root, query, builder) -> {
+			Join<ElectricPrice, User> priceUserJoin = root.join(ElectricPrice_.user);
+			List<Predicate> predicates = new ArrayList<>();
+			predicates.add(builder.equal(priceUserJoin.get(User_.ID), userId));
+
+			if (StringUtils.hasLength(year)) {
+				Expression<String> yearDate = builder.function("DATE_FORMAT", String.class, root.get(ElectricPrice_.IMPORTED_DATE), builder.literal("%Y"));
+				predicates.add(builder.equal(yearDate, year));
+			}
+			if (StringUtils.hasLength(month)) {
+				Expression<String> yearMonth = builder.function("DATE_FORMAT", String.class, root.get(ElectricPrice_.IMPORTED_DATE), builder.literal("%m"));
+				predicates.add(builder.equal(yearMonth, month));
+			}
+
+			return builder.and(predicates.toArray(new Predicate[0]));
+		};
+		Page<ElectricPrice> pricePage = electricPriceRepository.findAll(priceSpecification, pageable);
+		return pricePage;
 	}
 
 	public static void main(String[] args) {
